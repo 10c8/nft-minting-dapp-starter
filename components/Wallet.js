@@ -83,7 +83,7 @@ export default function Wallet() {
 
   return (
     <button
-      className="flex items-center p-3 text-xl font-bold bg-transparent rounded-none border-4 hover:border-gray-300 focus:border-gray-300 lg:top-8 lg:right-8 disabled:cursor-not-allowed"
+      className={`flex items-center p-3 text-xs font-bold bg-transparent rounded-none border-4 border-black lg:text-xl max-w-30 disabled:cursor-not-allowed ${connected ? 'hidden' : ''}`}
       onClick={handleConnectWallet}
       disabled={connected || message === 'INSTALL METAMASK'}
     >

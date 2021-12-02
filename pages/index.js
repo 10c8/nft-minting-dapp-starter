@@ -4,18 +4,39 @@ import { ethers } from 'ethers';
 
 import { hasEthereum } from '../utils/ethereum'
 import TotalSupply from '../components/TotalSupply';
+import MintButton from '../components/MintButton';
 import Wallet from '../components/Wallet';
-import YourNFTs from '../components/YourNFTs';
-import Minter from '../src/artifacts/contracts/Minter.sol/Minter.json';
+import GameStatus from '../components/GameStatus';
+import Leaderboard from '../components/Leaderboard';
+// import YourNFTs from '../components/YourNFTs';
+// import Minter from '../src/artifacts/contracts/Minter.sol/Minter.json';
+import Minter from './abi/cheebs.json';
 
 export default function Home() {
+  const getMintPrice = async () => {
+    try {
+      // Interact with contract
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const contract = new ethers.Contract(
+        process.env.NEXT_PUBLIC_MINTER_ADDRESS,
+        Minter.abi,
+        provider
+      );
+
+      const data = await contract.MINT_PRICE();
+      return data.toNumber();
+    } catch(error) {
+      console.log(error);
+    }
+  }
+
   // Constants
-  const MINT_PRICE = 0.03;
+  const MINT_PRICE = getMintPrice();
   const MAX_MINT = 10;
 
   // UI state
-  const [mintQuantity, setMintQuantity] = useState(1);
-  const mintQuantityInputRef = useRef();
+  const [mintQuantity, setMintQuantity] = useState(10);
+  // const mintQuantityInputRef = useRef();
   const [mintError, setMintError] = useState(false);
   const [mintMessage, setMintMessage] = useState('');
   const [mintLoading, setMintLoading] = useState(false);
@@ -26,14 +47,14 @@ export default function Home() {
     if (mintQuantity < 1) {
       setMintMessage('You need to mint at least 1 NFT.');
       setMintError(true);
-      mintQuantityInputRef.current.focus();
+      // mintQuantityInputRef.current.focus();
       return;
     }
 
     if (mintQuantity > MAX_MINT) {
       setMintMessage('You can only mint a maximum of 10 NFTs.');
       setMintError(true);
-      mintQuantityInputRef.current.focus();
+      // mintQuantityInputRef.current.focus();
       return;
     }
 
@@ -63,7 +84,7 @@ export default function Home() {
 
         await transaction.wait();
 
-        mintQuantityInputRef.current.value = 0;
+        // mintQuantityInputRef.current.value = 0;
         setMintMessage(`Congrats, you minted ${mintQuantity} token(s)!`);
         setMintError(false);
       } catch {
@@ -79,7 +100,7 @@ export default function Home() {
   }
 
   return (
-    <div className="flex flex-col items-center p-8 mx-auto max-w-7xl">
+    <div className="flex flex-col items-center p-4 pt-10 mx-auto w-full lg:p-8 lg:max-w-7xl">
       <Head>
         <title>NFT Minting dApp Starter</title>
         <meta name="description" content="Mint an NFT, or a number of NFTs, from the client-side." />
@@ -87,37 +108,68 @@ export default function Home() {
       </Head>
 
       <h1
-        className="text-6xl text-red-500"
+        className="text-6xl text-center text-yellow-500"
         style={{
           fontFamily: 'Broken Console Bold',
           textShadow: '6px 6px 0 black'
         }}
       >
-        NOT WOLF GAME
+        DOGE GAME
       </h1>
 
       <main
-        className="flex gap-6 items-center mt-6 w-full"
+        className="flex flex-col gap-6 items-center mt-6 w-full lg:flex-row"
         style={{
           fontFamily: 'Broken Console Bold'
         }}
       >
         {/* Minting Box */}
-        <div className="flex flex-col gap-8 items-center p-10 w-full border-4 border-black">
-          <h1 className="text-4xl">MINTING</h1>
-          <TotalSupply />
-          <button
-            className="px-8 pt-4 pb-3 bg-transparent border-4 border-black"
-            onClick={mintNFTs}
+        <div className="flex flex-col flex-shrink-0 gap-8 items-center p-8 w-full bg-white bg-opacity-80 lg:p-10 lg:w-1/2 bordered">
+          <h1
+            className="text-4xl text-red-600"
+            style={{
+              textShadow: '3px 3px 0 black'
+            }}
           >
-            {mintLoading ? 'Loading...' : 'Mint'}
-          </button>
+            MINTING
+          </h1>
+          <TotalSupply />
+          <MintButton loading={mintLoading} action={mintNFTs} />
         </div>
 
-        <div className="flex flex-col gap-8 items-center p-10 w-full h-60 border-4 border-black">
+        <div className="flex flex-col flex-shrink-0 gap-8 items-center p-8 w-full h-60 bg-white bg-opacity-80 lg:p-10 lg:w-1/2 bordered">
           <Wallet />
         </div>
       </main>
+
+      <div className="flex flex-col gap-6 items-center mt-8 w-full">
+        <div
+          className="flex flex-col gap-6 p-3 w-full bg-white bg-opacity-70 lg:w-1/2 lg:grid lg:grid-cols-2 bordered"
+          style={{
+            fontFamily: 'Broken Console Bold'
+          }}
+        >
+          <GameStatus />
+          <Leaderboard />
+        </div>
+
+        <div
+          className="flex flex-wrap gap-3 justify-center items-start p-3 w-full bg-white bg-opacity-70 lg:w-1/2 bordered"
+          style={{
+            fontFamily: 'Broken Console Bold'
+          }}
+        >
+          <div className="flex items-center h-14 bordered">
+            <a href="#" className="text-red-600">WHITEPAPER</a>
+          </div>
+          <div
+            className="w-1/2 h-14 bg-center bg-no-repeat bg-contain pb"
+          />
+          <a href="#" className="text-red-600 underline">
+            TERMS OF SERVICE
+          </a>
+        </div>
+      </div>
 
       {/* <main className="space-y-8">
         {!process.env.NEXT_PUBLIC_MINTER_ADDRESS ? (
