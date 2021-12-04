@@ -9,8 +9,8 @@ import Wallet from '../components/Wallet';
 import GameStatus from '../components/GameStatus';
 import Leaderboard from '../components/Leaderboard';
 // import YourNFTs from '../components/YourNFTs';
-// import Minter from '../src/artifacts/contracts/Minter.sol/Minter.json';
-import Minter from './abi/cheebs.json';
+
+import Minter from './abi/Doge.json';
 
 export default function Home() {
   const getMintPrice = async () => {
@@ -18,8 +18,8 @@ export default function Home() {
       // Interact with contract
       const provider = new ethers.providers.Web3Provider(window.ethereum);
       const contract = new ethers.Contract(
-        process.env.NEXT_PUBLIC_MINTER_ADDRESS,
-        Minter.abi,
+        process.env.NEXT_PUBLIC_DOGE_ADDR,
+        Minter,
         provider
       );
 
@@ -43,131 +43,145 @@ export default function Home() {
 
   // Call smart contract to mint NFT(s) from current address
   async function mintNFTs() {
-    // Check quantity
-    if (mintQuantity < 1) {
-      setMintMessage('You need to mint at least 1 NFT.');
-      setMintError(true);
-      // mintQuantityInputRef.current.focus();
-      return;
-    }
+    // // Check quantity
+    // if (mintQuantity < 1) {
+    //   setMintMessage('You need to mint at least 1 NFT.');
+    //   setMintError(true);
+    //   // mintQuantityInputRef.current.focus();
+    //   return;
+    // }
 
-    if (mintQuantity > MAX_MINT) {
-      setMintMessage('You can only mint a maximum of 10 NFTs.');
-      setMintError(true);
-      // mintQuantityInputRef.current.focus();
-      return;
-    }
+    // if (mintQuantity > MAX_MINT) {
+    //   setMintMessage('You can only mint a maximum of 10 NFTs.');
+    //   setMintError(true);
+    //   // mintQuantityInputRef.current.focus();
+    //   return;
+    // }
 
-    // Get wallet details
-    if(!hasEthereum())
-      return;
+    // // Get wallet details
+    // if(!hasEthereum())
+    //   return;
     
-    try {
-      const provider = new ethers.providers.Web3Provider(window.ethereum);
-      const signer = provider.getSigner();
+    // try {
+    //   const provider = new ethers.providers.Web3Provider(window.ethereum);
+    //   const signer = provider.getSigner();
 
-      try {
-        // const address = await signer.getAddress();
+    //   try {
+    //     // const address = await signer.getAddress();
 
-        setMintLoading(true);
+    //     setMintLoading(true);
 
-        // Interact with contract
-        const contract = new ethers.Contract(
-          process.env.NEXT_PUBLIC_MINTER_ADDRESS,
-          Minter.abi,
-          signer
-        );
-        const totalPrice = MINT_PRICE * mintQuantity;
-        const transaction = await contract.mint(mintQuantity, {
-          value: ethers.utils.parseEther(totalPrice.toString())
-        });
+    //     // Interact with contract
+    //     const contract = new ethers.Contract(
+    //       process.env.NEXT_PUBLIC_MINTER_ADDRESS,
+    //       Minter,
+    //       signer
+    //     );
+    //     const totalPrice = MINT_PRICE * mintQuantity;
+    //     const transaction = await contract.mint(mintQuantity, {
+    //       value: ethers.utils.parseEther(totalPrice.toString())
+    //     });
 
-        await transaction.wait();
+    //     await transaction.wait();
 
-        // mintQuantityInputRef.current.value = 0;
-        setMintMessage(`Congrats, you minted ${mintQuantity} token(s)!`);
-        setMintError(false);
-      } catch {
-        setMintMessage('Connect your wallet first.');
-        setMintError(true);
-      }
-    } catch(error) {
-      setMintMessage(error.message);
-      setMintError(true);
-    }
+    //     // mintQuantityInputRef.current.value = 0;
+    //     setMintMessage(`Congrats, you minted ${mintQuantity} token(s)!`);
+    //     setMintError(false);
+    //   } catch {
+    //     setMintMessage('Connect your wallet first.');
+    //     setMintError(true);
+    //   }
+    // } catch(error) {
+    //   setMintMessage(error.message);
+    //   setMintError(true);
+    // }
 
-    setMintLoading(false);
+    // setMintLoading(false);
   }
 
   return (
-    <div className="flex flex-col items-center p-4 pt-10 mx-auto w-full lg:p-8 lg:max-w-7xl">
+    <div className="flex flex-col items-center p-4 pt-8 mx-auto w-full lg:p-8 lg:max-w-7xl">
       <Head>
         <title>NFT Minting dApp Starter</title>
         <meta name="description" content="Mint an NFT, or a number of NFTs, from the client-side." />
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <h1
-        className="text-6xl text-center text-yellow-500"
+      <div
+        className="mt-6 bg-cover logo"
         style={{
-          fontFamily: 'Broken Console Bold',
-          textShadow: '6px 6px 0 black'
+          width: 'calc(679px * 0.75)',
+          height: 'calc(87px * 0.75)',
+          // filter: 'drop-shadow(16px 16px 0px rgba(0, 0, 0, 0.3))'
         }}
-      >
-        DOGE GAME
-      </h1>
+      />
 
       <main
-        className="flex flex-col gap-6 items-center mt-6 w-full lg:flex-row"
+        className="flex flex-col gap-3 items-center mt-16 w-full lg:flex-row"
         style={{
           fontFamily: 'Broken Console Bold'
         }}
       >
         {/* Minting Box */}
-        <div className="flex flex-col flex-shrink-0 gap-8 items-center p-8 w-full bg-white bg-opacity-80 lg:p-10 lg:w-1/2 bordered">
-          <h1
-            className="text-4xl text-red-600"
-            style={{
-              textShadow: '3px 3px 0 black'
-            }}
-          >
-            MINTING
-          </h1>
+        <div className="flex flex-col flex-shrink-0 gap-8 items-center p-8 w-full h-80 bg-yellow-100 bg-opacity-90 lg:p-10 lg:w-1/2 bordered">
+          <h1 className="text-4xl text-red-600">MINTING</h1>
           <TotalSupply />
           <MintButton loading={mintLoading} action={mintNFTs} />
         </div>
 
-        <div className="flex flex-col flex-shrink-0 gap-8 items-center p-8 w-full h-60 bg-white bg-opacity-80 lg:p-10 lg:w-1/2 bordered">
-          <Wallet />
+        {/* Staking Box */}
+        <div className="grid flex-shrink-0 grid-rows-2 w-full h-80 bg-yellow-100 bg-opacity-90 lg:w-1/2 bordered">
+          <div
+            className="flex row-span-1 items-center px-4 w-full"
+            style={{
+              borderBottom: '7px solid black'
+            }}
+          >
+            <h1 className="mt-2 mr-auto text-4xl">UNSTAKED</h1>
+            <Wallet />
+          </div>
+          <div
+            className="flex row-span-1 items-center px-4 w-full"
+            style={{
+              borderTop: '7px solid black'
+            }}
+          >
+            <h1 className="mt-2 mr-auto text-4xl">STAKED</h1>
+            <Wallet />
+          </div>
         </div>
       </main>
 
-      <div className="flex flex-col gap-6 items-center mt-8 w-full">
-        <div
-          className="flex flex-col gap-6 p-3 w-full bg-white bg-opacity-70 lg:w-1/2 lg:grid lg:grid-cols-2 bordered"
-          style={{
-            fontFamily: 'Broken Console Bold'
-          }}
-        >
+      <main
+        className="flex flex-col gap-6 items-center mt-3 w-full lg:flex-row"
+        style={{
+          fontFamily: 'Broken Console Bold'
+        }}
+      >
+        {/* Game Status */}
+        <div className="p-6 w-full h-80 bg-yellow-100 bg-opacity-90 bordered lg:w-1/2">
           <GameStatus />
-          <Leaderboard />
         </div>
+      </main>
+      
+      {/* <GameStatus /> */}
 
+      {/* <Leaderboard /> */}
+
+      <div
+        className="flex fixed bottom-0 left-0 items-center px-20 mt-8 w-full h-20 bg-yellow-100 bg-opacity-90"
+        style={{
+          fontFamily: 'Broken Console Bold'
+        }}
+      >
         <div
-          className="flex flex-wrap gap-3 justify-center items-start p-3 w-full bg-white bg-opacity-70 lg:w-1/2 bordered"
-          style={{
-            fontFamily: 'Broken Console Bold'
-          }}
-        >
-          <div className="flex items-center h-14 bordered">
-            <a href="#" className="text-red-600">WHITEPAPER</a>
-          </div>
-          <div
-            className="w-1/2 h-14 bg-center bg-no-repeat bg-contain pb"
-          />
-          <a href="#" className="text-red-600 underline">
-            TERMS OF SERVICE
-          </a>
+          className="mr-auto w-32 h-12 bg-center bg-no-repeat bg-contain pb"
+        />
+        <a href="#" className="text-red-600 underline">
+          TERMS OF SERVICE
+        </a>
+        <div className="flex items-center px-3 pt-2 pb-1 ml-auto border-2 border-blue-400">
+          <a href="#" className="text-red-600">WHITEPAPER</a>
         </div>
       </div>
 

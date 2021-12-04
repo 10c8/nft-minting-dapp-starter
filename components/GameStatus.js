@@ -47,10 +47,11 @@ export default function GameStatus() {
   
   return (
     <div className="flex flex-col col-span-1 gap-2 h-full">
-      <h1 className="text-xl text-center text-red-600 underline">
+      <h1 className="text-xl text-center text-red-600">
         GAME STATUS
       </h1>
-      <span className="text-md">STUFF MINTED: {totalMinted}</span>
+      {/* <span className="text-md">STUFF MINTED: {totalMinted}</span> */}
+      <span className="text-center">Game launching on December 5th!</span> 
     </div>
   );
 }

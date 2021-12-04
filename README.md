@@ -1,3 +1,9 @@
+# Addresses
+Traits:     0x490258B35A1D8Dd83DaC000552a34608397F9ab2
+MEME:       0x469E2b2Ad3059aC75F9d888e6e144f4eA86a2F2f
+Doge:       0x51715A290B9D57B18149132c910A24AC91B6EF7e
+Memeverse:  0xDB9d2Cb3FD6c7D4CC3c3BF3c4273EeD675E069BF
+
 # NFT Minting dApp Starter
 
 A full stack dApp starter for minting NFTs built on Ethereum (Solidity) with Next.js (React).
